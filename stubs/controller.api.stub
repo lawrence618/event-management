@@ -1,0 +1,97 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Exception;
+
+class {{ class }} extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        try {
+            // Your code here
+        } catch (Exception $e) {
+            return $e->getMessage();
+            // Handle expected exceptions
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return Response::error($e);
+            // Handle any other errors
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        try {
+            // Your code here
+        } catch (Exception $e) {
+            return $e->getMessage();
+            // Handle expected exceptions
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return Response::error($e);
+            // Handle any other errors
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        try {
+            // Your code here
+        } catch (Exception $e) {
+            return $e->getMessage();
+            // Handle expected exceptions
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return Response::error($e);
+            // Handle any other errors
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try {
+            // Your code here
+        } catch (Exception $e) {
+            return $e->getMessage();
+            // Handle expected exceptions
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return Response::error($e);
+            // Handle any other errors
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        try {
+            // Your code here
+        } catch (Exception $e) {
+            return $e->getMessage();
+            // Handle expected exceptions
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return Response::error($e);
+            // Handle any other errors
+        }
+    }
+}
