@@ -20,11 +20,9 @@ class {{ class }} extends Controller
             // Your code here
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 
@@ -37,11 +35,9 @@ class {{ class }} extends Controller
             // Your code here
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 
@@ -54,11 +50,9 @@ class {{ class }} extends Controller
             // Your code here
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 
@@ -71,11 +65,9 @@ class {{ class }} extends Controller
             // Your code here
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 
@@ -88,11 +80,9 @@ class {{ class }} extends Controller
             // Your code here
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 }

@@ -11,7 +11,7 @@ class Attendee extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'user_id',
     ];
 
     public function event(): BelongsTo

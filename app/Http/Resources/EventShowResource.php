@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventIndexResource extends JsonResource
+class EventShowResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,7 @@ class EventIndexResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => str($this->description)->limit(20),
+            'description' => $this->description,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'user' => new UserResource($this->whenLoaded('user')),

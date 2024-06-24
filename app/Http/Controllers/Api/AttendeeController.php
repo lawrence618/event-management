@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAttendeeRequest;
+use App\Http\Resources\AttendeeResource;
 use App\Models\Attendee;
+use App\Models\Event;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +17,14 @@ class AttendeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Event $event)
     {
         try {
-            // Your code here
+            $attendees = $event->attendees()->latest();
+
+            return AttendeeResource::collection(
+                $attendees->paginate(5)
+            );
         } catch (Exception $e) {
             return $e->getMessage();
             // Handle expected exceptions
@@ -31,10 +38,14 @@ class AttendeeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAttendeeRequest $request, Event $event)
     {
         try {
-            // Your code here
+            $attendee = $event->attendees()->create([
+                'user_id' => 1
+            ]);
+    
+            return new AttendeeResource($attendee);
         } catch (Exception $e) {
             return $e->getMessage();
             // Handle expected exceptions
@@ -48,10 +59,10 @@ class AttendeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Attendee $attendee)
+    public function show(Event $event, Attendee $attendee)
     {
         try {
-            // Your code here
+            return new AttendeeResource($attendee);
         } catch (Exception $e) {
             return $e->getMessage();
             // Handle expected exceptions
@@ -82,10 +93,11 @@ class AttendeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Attendee $attendee)
+    public function destroy(string $event, Attendee $attendee)
     {
         try {
-            // Your code here
+            $attendee->delete();
+            return response(status: 204);
         } catch (Exception $e) {
             return $e->getMessage();
             // Handle expected exceptions

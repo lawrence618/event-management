@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventIndexResource;
+use App\Http\Resources\EventShowResource;
 use App\Http\Resources\EventStoreResource;
+use App\Http\Traits\CanLoadRelationships;
 use App\Models\Event;
 use Exception;
 use Illuminate\Http\Request;
@@ -14,8 +16,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
+
 class EventController extends Controller
 {
+    use CanLoadRelationships;
+
+    private array $relations = ['user', 'attendees', 'attendees.user'];
     /**
      * Display a listing of the resource.
      */
@@ -23,16 +29,14 @@ class EventController extends Controller
     {
 
         try {
-            $events = Event::latest()->simplePaginate(5);
+            $query = $this->loadRelationships(Event::query());
+            $events = $query->latest()->paginate(5);
             return EventIndexResource::collection($events);
-            // Your code here
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 
@@ -44,9 +48,10 @@ class EventController extends Controller
         try {
             $validatedData = $request->validated();
             $validatedData['user_id'] = 1;
-
             $event = Event::create($validatedData);
-            return new EventStoreResource($event);
+
+            return new EventStoreResource($this->loadRelationships($event));
+            
         } catch (Exception $e) {
             return $e->getMessage();
         } catch (\Throwable $e) {
@@ -61,15 +66,13 @@ class EventController extends Controller
     public function show(Event $event)
     {
         try {
-            return new EventIndexResource($event);
-            // Your code here
+            $event->load('user', 'attendees');
+            return new EventShowResource($this->loadRelationships($event));
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 
@@ -81,15 +84,12 @@ class EventController extends Controller
 
         try {
             $event->update($request->validated());
-            return new EventStoreResource($event);
-            // Your code here
+            return new EventStoreResource($this->loadRelationships($this->loadRelationships($event)));
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 
@@ -105,14 +105,11 @@ class EventController extends Controller
                     'Event ID: ' . $event->id .
                     'Event Name: ' . $event->name
             ]]);
-            // Your code here
         } catch (Exception $e) {
             return $e->getMessage();
-            // Handle expected exceptions
         } catch (\Throwable $e) {
             DB::rollback();
             return Response::error($e);
-            // Handle any other errors
         }
     }
 }
