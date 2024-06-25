@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => 60 * 24,
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +66,7 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Sanctum Middleware
-    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------------------`
     |
     | When authenticating your first-party SPA with Sanctum you may need to
     | customize some of the middleware Sanctum uses while processing the

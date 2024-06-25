@@ -22,6 +22,7 @@ class EventController extends Controller
     use CanLoadRelationships;
 
     private array $relations = ['user', 'attendees', 'attendees.user'];
+    
     /**
      * Display a listing of the resource.
      */
@@ -47,7 +48,7 @@ class EventController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            $validatedData['user_id'] = 1;
+            $validatedData['user_id'] = $request->user()->id;
             $event = Event::create($validatedData);
 
             return new EventStoreResource($this->loadRelationships($event));
