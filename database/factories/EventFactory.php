@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,7 @@ class EventFactory extends Factory
             'description' => fake()->text(),
             'start_time' => fake()->dateTimeBetween('now', '+1 month'),
             'end_time' => fake()->dateTimeBetween('+1 month', '+2 month'),
+            'user_id' => User::factory(),
         ];
     }
 }

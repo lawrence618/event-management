@@ -13,6 +13,7 @@ use App\Models\Event;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
@@ -28,7 +29,6 @@ class EventController extends Controller
      */
     public function index()
     {
-
         try {
             $query = $this->loadRelationships(Event::query());
             $events = $query->latest()->paginate(5);
@@ -82,10 +82,13 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-
         try {
+            if (Gate::denies('update', $event)) {
+                abort(403, 'You are not authorized to update this event.');
+            }
+
             $event->update($request->validated());
-            return new EventStoreResource($this->loadRelationships($this->loadRelationships($event)));
+            return new EventStoreResource($this->loadRelationships($event));
         } catch (Exception $e) {
             return $e->getMessage();
         } catch (\Throwable $e) {
@@ -100,6 +103,9 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         try {
+            if (Gate::denies('delete', $event)) {
+                abort(403, 'You are not authorized to delete this event.');
+            }
             $event->delete();
             return response()->json(['message' => [
                 'Event deleted successfully.' .

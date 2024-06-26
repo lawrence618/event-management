@@ -13,7 +13,7 @@ class AttendeePolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class AttendeePolicy
      */
     public function view(User $user, Attendee $attendee): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class AttendeePolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -45,7 +45,8 @@ class AttendeePolicy
      */
     public function delete(User $user, Attendee $attendee): bool
     {
-        //
+        return $user->id === $attendee->event->user_id ||
+            $user->id === $attendee->user_id;
     }
 
     /**

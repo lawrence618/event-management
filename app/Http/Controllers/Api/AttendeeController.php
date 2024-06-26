@@ -11,13 +11,14 @@ use App\Models\Event;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Response;
 
 class AttendeeController extends Controller
 {
     use CanLoadRelationships;
 
-    private array $relations = ['user'];
+    private array $relations = ['user', 'attendees', 'attendees.user'];
     /**
      * Display a listing of the resource.
      */
@@ -49,7 +50,7 @@ class AttendeeController extends Controller
         try {
             $attendee = $this->loadRelationships(
                 $event->attendees()->create([
-                    'user_id' => 1
+                    'user_id' => $request->user()->id,
                 ])
             );
     
@@ -106,6 +107,10 @@ class AttendeeController extends Controller
     public function destroy(string $event, Attendee $attendee)
     {
         try {
+            if (Gate::denies('delete', $attendee)) {
+                // abort(403, message:[ 'You are not authorized to delete this attendee. ' . 'Attendee ID: ' . $attendee->id . 'Attendee Name: ' . $attendee->name]);
+                abort(403, 'You are not authorized to delete this attendee. Attendee ID: ' . $attendee->id . ' Attendee Id: ' . $attendee->user_id . ' Attendee Name: ' . $attendee->user->name . ' Attendee Email: ' . $attendee->user->email);
+            }
             $attendee->delete();
             return response(status: 204);
         } catch (Exception $e) {
